@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaSearch, FaUserCircle, FaCog, FaSignOutAlt, FaBell, FaSun, FaMoon } from "react-icons/fa";
-import "../../css/dashboard/Header.css";
+import "./Header.css";
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -68,9 +68,6 @@ const Header = () => {
       </div>
 
       <div className="user-info">
-        <button className="theme-toggle" onClick={toggleTheme}>
-          {isDarkMode ? <FaSun /> : <FaMoon />}
-        </button>
 
         <div className="notifications" ref={notificationsRef} onClick={toggleNotificationsDropdown}>
           <FaBell className="notifications-icon" />
