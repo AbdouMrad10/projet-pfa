@@ -5,26 +5,17 @@ import CampaignsPage from "../pages/dashboard/CampaignsPage";
 import CreateCampaignPage from "../pages/dashboard/CreateCampaignPage";
 
 import MainLayout from "../layout/dashboard/MainLayout";
+import  HomePage  from "../pages/dashboard/HomePage";
 const DashboardRoutes = () => {
   return (
     <Routes>
-      <Route
-        path="/campaigns"
-        element={
-          <MainLayout>
-            <CampaignsPage />
-          </MainLayout>
-        }
-      />
-      <Route
-        path="/create-campaign"
-        element={
-          <MainLayout>
-            <CreateCampaignPage />
-          </MainLayout>
-        }
-      />
-      {/* Add more routes here as needed */}
+
+        <Route path="dashboard" element={<MainLayout />}>
+          <Route path="" element={<HomePage />} />
+          <Route path="campaigns" element={<CampaignsPage />} />
+          <Route path="create-campaign" element={<CreateCampaignPage />} />
+          
+        </Route>
     </Routes>
   );
 };

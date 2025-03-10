@@ -1,0 +1,13 @@
+:root{
+    --var--primary-color: #007bff;
+    --var--secondary-color: #6c757d;
+    --var--success-color: #28a745;
+    --var--info-color: #17a2b8;
+    --var--warning-color: #ffc107;
+    --var--danger-color: #dc3545;
+    --var--light-color: #f8f9fa;
+    --var--dark-color: #343a40;
+    --var--breakpoint-sm: 576px;
+    
+
+}
