@@ -1,11 +1,97 @@
-import React from "react";
+import React from 'react';
+import { PlusOutlined } from '@ant-design/icons';
+import {
+  Button,
+  DatePicker,
+  Form,
+  Input,
+  InputNumber,
+  Radio,
+  Row,
+  Col,
+} from 'antd';
+
+const { TextArea } = Input;
+
+const sub = () => {
+  alert("Campaign created");
+};
 
 const CreateCampaignPage = () => {
   return (
-    <div>
-      <h2>Create Campaign</h2>
-      <p>This is the create campaign page.</p>
-    </div>
+    <>
+      <Form
+        wrapperCol={{ span: 24 }}
+        layout="vertical"
+        style={{ maxWidth: 600, marginLeft: '16px' }} // Ajustez la marge à gauche
+      >
+        {/* Ligne 1 : Titre */}
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item label="Title" name="title">
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label="État" name="state">
+              <Radio.Group>
+                <Radio value="active">Active</Radio>
+                <Radio value="completed">Completed</Radio>
+              </Radio.Group>
+            </Form.Item>
+          </Col>
+        </Row>
+
+        {/* Ligne 2 : Description */}
+       
+
+        {/* Ligne 3 : Quantité Cible et Quantité Collectée */}
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item label="Quantité Cible" name="targetQuantity">
+              <InputNumber style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label="Quantité Collectée" name="collectedQuantity">
+              <InputNumber style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        {/* Ligne 4 : Date de Début et Date de Fin */}
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item label="Date de Début" name="startDate">
+              <DatePicker style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label="Date de Fin" name="endDate">
+              <DatePicker style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
+        </Row>
+ <Row gutter={16}>
+          <Col span={24}>
+            <Form.Item label="Description" name="description">
+              <TextArea rows={4} />
+            </Form.Item>
+          </Col>
+        </Row>
+        {/* Ligne 5 : Boutons Soumettre et Annuler */}
+        <Row gutter={16}>
+          <Col span={24} style={{ textAlign: 'left' }}> {/* Alignement à gauche */}
+            <Form.Item>
+              <Button onClick={sub} style={{ marginRight: '8px' }} type="primary">
+                Soumettre
+              </Button>
+              <Button>Annuler</Button>
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form>
+    </>
   );
 };
 
