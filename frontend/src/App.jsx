@@ -28,8 +28,6 @@ function App() {
         <Router>
             <DashboardRoutes /> {/* Use the AppRoutes component here */}
         </Router>
-
-
     </ConfigProvider>
     </>
   )
