@@ -1,27 +1,40 @@
 import mongoose from 'mongoose';
 
 const campaignSchema = new mongoose.Schema({
-  Titre: { 
+  title: { 
     type: String, 
     required: true 
   },
-  Etat:{
+  status: {
     type: String,
     enum: ['completed', 'active'],
-    default: 'active'
+    default: 'active',
+    index: true
   },
-  Description: String,
-  QuantiteCible: Number,
-  QuantiteCollecte: {
+  description: String,
+  collectedQuantity: { 
+    type: Number, 
+    default: 0, 
+    min: 0 
+  },
+  targetQuantity: {
      type: Number,
-     default: 0
-     },
-  DateDebut: {
+     default: 0,
+     min: 0
+  },
+  startDate: {
     type: Date,
     default: Date.now
   },
-  DateFin: Date
+  endDate: {
+    type: Date,
+    validate: {
+      validator: function(value) {
+        return !value || value > this.startDate;
+      },
+      message: "End date must be after start date"
+    }
+  }
 });
 
 export const Campaign = mongoose.model("Campaign", campaignSchema);
-

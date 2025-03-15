@@ -19,12 +19,12 @@ app.get("/", (req, res) => res.send("API en marche"));
 app.use('/api/admin', DashboardRoutes);
 
 const PORT = process.env.PORT || 5000;
+
 const mongoURI = process.env.MONGO_URI;
-mongoose.connect(mongoURI)
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.log('Error connecting to MongoDB:', err));
-const mongoURI = process.env.MONGO_URI;
+// console.log(mongoURI)
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB connected'))
+  .then(() => {
+    console.log('MongoDB connected')
+    app.listen(PORT, () => console.log(`Serveur démarré sur le port ${PORT}`));
+  })
   .catch(err => console.log('Error connecting to MongoDB:', err));
-app.listen(PORT, () => console.log(`Serveur démarré sur le port ${PORT}`));

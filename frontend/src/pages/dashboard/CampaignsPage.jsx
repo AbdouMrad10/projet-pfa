@@ -1,112 +1,144 @@
-import React from 'react';
-import { Table, Space } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Table, Space, Spin, Popconfirm } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'; // Import des icônes
+import api from '../../config/axiosConfig';
+import { useNavigate } from 'react-router-dom';
 
-const columns = [
-  {
-    title: 'Title',
-    dataIndex: 'Titre',
-    showSorterTooltip: {
-      target: 'full-header',
+const CampaignsPage = () =>{
+
+  let navigate = useNavigate()
+    
+  const columns = [
+    {
+      title: 'Title',
+      dataIndex: 'title',
+      showSorterTooltip: {
+        target: 'full-header',
+      },
+      onFilter: (value, record) => record.Titre.indexOf(value) === 0,
+      sorter: (a, b) => a.Titre.length - b.Titre.length,
+      sortDirections: ['descend'],
     },
-    onFilter: (value, record) => record.Titre.indexOf(value) === 0,
-    sorter: (a, b) => a.Titre.length - b.Titre.length,
-    sortDirections: ['descend'],
-  },
-  {
-    title: 'Etat',
-    dataIndex: 'etat',
-  },
-  {
-    title: 'Description',
-    dataIndex: 'description',
-  },
-  {
-    title: 'QuantiteCible',
-    dataIndex: 'QuantiteCible',
-  },
-  {
-    title: 'QuantiteCollecte',
-    dataIndex: 'QuantiteCollecte',
-  },
-  {
-    title: 'DateDebut',
-    dataIndex: 'DateDebut',
-    render: (date) => new Date(date).toLocaleDateString(), // Formate la date
-  },
-  {
-    title: 'DateFin',
-    dataIndex: 'DateFin',
-    render: (date) => new Date(date).toLocaleDateString(), // Formate la date
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    render: (_, record) => (
-      <Space size="middle">
-        {/* Icône Update */}
-        <EditOutlined
-          className="text-blue-500 cursor-pointer hover:text-blue-700"
-          onClick={() => handleUpdate(record)}
+    {
+      title: 'Status',
+      dataIndex: 'status',
+    },
+    {
+      title: 'Description',
+      dataIndex: 'description',
+    },
+    {
+      title: 'Target Quantity',
+      dataIndex: 'targetQuantity',
+    },
+    {
+      title: 'Collected Quantity',
+      dataIndex: 'collectedQuantity',
+    },
+    {
+      title: 'Start Date',
+      dataIndex: 'startDate',
+      render: (date) => new Date(date).toLocaleDateString(), // Formate la date
+    },
+    {
+      title: 'End Date',
+      dataIndex: 'endDate',
+      render: (date) => new Date(date).toLocaleDateString(), // Formate la date
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (_, record) => (
+        <Space size="middle">
+          {/* Icône Update */}
+          <EditOutlined
+            className="text-blue-500 cursor-pointer hover:text-blue-700"
+            onClick={() => handleUpdate(record)}
+          />
+          {/* Icône Delete */}
+          <Popconfirm
+            className="text-red-500 cursor-pointer hover:text-red-700"
+            onConfirm={() => handleDelete(record)}
+            title="Delete the campaign"
+            description="Are you sure to delete this campaign?"
+          >
+            <DeleteOutlined/>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
+
+  // Fonction pour gérer l'action "Update"
+  const handleUpdate = (record) => {
+    // console.log(record)
+    navigate(`/dashboard/update-campaign/${record._id}`)
+    // alert(`Mise à jour de la campagne : ${record.Titre}`);
+  };
+
+  // Fonction pour gérer l'action "Delete"
+  const handleDelete = async (record) => {
+    console.log('Delete:', record);
+    try {
+    let result= await api.delete(`/api/admin/delete-campaign/${record._id}`)
+    console.log(result)
+    getCampaigns()
+    } catch (err) {
+      console.error(err)
+    }finally{
+
+    }
+    // alert(`Suppression de la campagne : ${record.Titre}`);
+  };
+
+  const onChange = (pagination, filters, sorter, extra) => {
+    console.log('params', pagination, filters, sorter, extra);
+  };
+
+
+    const [campaigns, setCampaigns] = useState()
+    const [loading, setLoading] = useState(false);
+    // const [error, setError] = useState(null);
+    // const [deletePopup, setDeletePopup] = useState(true)
+
+    const getCampaigns = async()=>{
+      try {
+        setLoading(true)
+        let result = await api.get('/api/admin/campaings')
+        if(result.status===200){
+          const newList = result.data.data.map((item, index) => ({
+            ...item,  // Keep existing properties
+            key: index  // Add key as the index
+          }));  
+          setCampaigns(newList)
+        }
+        // console.log(result.data.data)
+      } catch (error) {
+        console.error(error)
+      }finally{
+        setLoading(false)
+      }
+    }
+    useEffect(()=>{
+      getCampaigns()
+
+    }, [])
+
+  return  (
+    <>
+      <Spin spinning={loading}>
+        <Table
+          columns={columns}
+          dataSource={campaigns}
+          onChange={onChange}
+          showSorterTooltip={{
+            target: 'sorter-icon',
+          }}
         />
-        {/* Icône Delete */}
-        <DeleteOutlined
-          className="text-red-500 cursor-pointer hover:text-red-700"
-          onClick={() => handleDelete(record)}
-        />
-      </Space>
-    ),
-  },
-];
-
-const data = [
-  {
-    key: '1',
-    Titre: "Campagne X9Y8Z",
-    etat: "completed",
-    description: "Collecte de fonds pour la construction d'une école en zone rurale.",
-    QuantiteCible: "1000",
-    QuantiteCollecte: "1000",
-    DateDebut: "2022-06-01T10:00:00.000Z",
-    DateFin: "2022-12-31T23:59:59.000Z",
-  },
-  {
-    key: '2',
-    Titre: "Campagne A1B2C",
-    etat: "active",
-    description: "Aide alimentaire pour les familles dans le besoin.",
-    QuantiteCible: "500",
-    QuantiteCollecte: "250",
-    DateDebut: "2023-01-01T09:00:00.000Z",
-    DateFin: "2023-06-30T23:59:59.000Z",
-  },
-];
-
-// Fonction pour gérer l'action "Update"
-const handleUpdate = (record) => {
-  console.log('Update:', record);
-  alert(`Mise à jour de la campagne : ${record.Titre}`);
-};
-
-// Fonction pour gérer l'action "Delete"
-const handleDelete = (record) => {
-  console.log('Delete:', record);
-  alert(`Suppression de la campagne : ${record.Titre}`);
-};
-
-const onChange = (pagination, filters, sorter, extra) => {
-  console.log('params', pagination, filters, sorter, extra);
-};
-
-const CampaignsPage = () => (
-  <Table
-    columns={columns}
-    dataSource={data}
-    onChange={onChange}
-    showSorterTooltip={{
-      target: 'sorter-icon',
-    }}
-  />
-);
+      </Spin>
+    </>
+)
+}
 
 export default CampaignsPage;

@@ -40,22 +40,49 @@ export const getCampaign = async (req, res) => {
 }
 
 export const createCampaign = async (req, res) => {
-    const { Titre, Etat,Description, QuantiteCible , QuantiteCollecte, DateDebut, DateFin } = req.body;
-    const newCampaign = new Campaign({
-        Titre ,
-        Etat,
-        Description ,
-        QuantiteCible ,
-        QuantiteCollecte,
-        DateDebut ,
-        DateFin,
-    })
-    await newCampaign.save();
-    res.json({
-        message: "Campaign created successfully",
-        data: newCampaign
-    });
-}
+    try {
+        const { title, status = "active", description, targetQuantity = 0, collectedQuantity = 0, startDate, endDate } = req.body;
+
+        // Ensure dates are converted properly
+        const parsedStartDate = startDate ? new Date(startDate) : undefined;
+        const parsedEndDate = endDate ? new Date(endDate) : undefined;
+
+        const newCampaign = new Campaign({
+            title,
+            status,
+            description,
+            targetQuantity,
+            collectedQuantity,
+            startDate: parsedStartDate,
+            endDate: parsedEndDate
+        });
+
+        let result = await newCampaign.save();
+        console.log("Campaign Created:", result);
+
+        res.status(201).json({
+            message: "Campaign created successfully",
+            data: result
+        });
+
+    } catch (error) {
+        console.error("Error Creating Campaign:", error);
+        
+        // Handle Mongoose validation errors
+        if (error.name === "ValidationError") {
+            return res.status(400).json({
+                error: "Validation error",
+                message: error.message
+            });
+        }
+
+        res.status(500).json({
+            error: "Error in creating campaign",
+            message: error.message
+        });
+    }
+};
+
 
 export const updateCampaign = async (req, res) => {
     try {
@@ -65,18 +92,22 @@ export const updateCampaign = async (req, res) => {
             return res.status(400).json({ message: "Invalid campaign id" });
         }
 
-        const { Titre, Etat, Description, QuantiteCible, QuantiteCollecte, DateDebut, DateFin } = req.body;
+        const { title, status = "active", description, targetQuantity = 0, collectedQuantity = 0, startDate, endDate } = req.body;
+
+        // Ensure dates are converted properly
+        const parsedStartDate = startDate ? new Date(startDate) : undefined;
+        const parsedEndDate = endDate ? new Date(endDate) : undefined;
 
         const updatedCampaign = await Campaign.findByIdAndUpdate(
             id,
             {
-                Titre,
-                Etat,
-                Description,
-                QuantiteCible,
-                QuantiteCollecte,
-                DateDebut,
-                DateFin,
+                title,
+                status,
+                description,
+                targetQuantity,
+                collectedQuantity,
+                startDate: parsedStartDate,
+                endDate: parsedEndDate
             },
             { new: true } // Return the updated document
         );
