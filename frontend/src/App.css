@@ -1,7 +1,7 @@
 body {
     margin: 0 !important;
     font-family: Arial, sans-serif;
-    background-color: #ebe9e9;
+    background-color: #FFFFFF;
 }
 
 a {
@@ -12,3 +12,8 @@ a {
 button {
     cursor: pointer;
 }
+
+    .splide__track {
+      padding: 10px !important;
+    }
+ 

@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import DashboardRoutes from "./routes/DashboardRoutes";
+import WebRoutes from "./routes/WebRoutes";
 import { ConfigProvider } from "antd";
 function App() {
 
@@ -26,7 +27,8 @@ function App() {
     >
 
         <Router>
-            <DashboardRoutes /> {/* Use the AppRoutes component here */}
+            <DashboardRoutes /> 
+            <WebRoutes />
         </Router>
     </ConfigProvider>
     </>
