@@ -1,0 +1,119 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  height: 60px;
+  min-width: 320px;
+  width: 100%;
+  background-color: #000;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 22.52px;
+  height: 22.52px;
+}
+
+.logo-text {
+  font-family: 'Comfortaa', sans-serif;
+  font-size: 28.44px;
+  font-weight: 400;
+  letter-spacing: -0.43px;
+  color: #bf8c6f;
+}
+
+.nav-links {
+  display: flex;
+  gap: 30px;
+  margin-left: 40px;
+}
+
+.nav-link {
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.225px;
+  color: #e5e5e5;
+  text-decoration: none;
+  text-transform: capitalize;
+}
+
+.nav-link:hover {
+  color: #fff;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.donate-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #bf8c6f;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  height: 40px;
+}
+
+.donate-btn:hover {
+  background-color: #a67857;
+}
+
+.btn-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.donate-btn span {
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.24px;
+  color: #fff;
+}
+
+.user-icon {
+  width: 37px;
+  height: 37px;
+  cursor: pointer;
+}
+
+.user-circle {
+  width: 37px;
+  height: 37px;
+  background-color: #bf8c6f;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+
+  .header {
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 480px) {
+  .donate-btn span {
+    display: none;
+  }
+
+  .header-actions {
+    gap: 10px;
+  }
+}
+

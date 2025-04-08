@@ -1,0 +1,19 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.main-content {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: row;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    flex-direction: column;
+  }
+}
+
