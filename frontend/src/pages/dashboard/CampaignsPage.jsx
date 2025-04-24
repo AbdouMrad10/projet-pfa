@@ -26,6 +26,19 @@ const CampaignsPage = () =>{
     {
       title: 'Description',
       dataIndex: 'description',
+      render: (text) => (
+        <div
+          style={{
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
+        >
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Target Quantity',

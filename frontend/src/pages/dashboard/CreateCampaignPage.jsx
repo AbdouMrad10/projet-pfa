@@ -9,35 +9,75 @@ import {
   Row,
   Col,
   Spin,
+  Upload,
+  message,
 } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import api from '../../config/axiosConfig';
 
 const { TextArea } = Input;
 
-const sub = () => {
-  // alert("Campaign created");
-};
-
 const CreateCampaignPage = () => {
+  const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm();
 
-  const [loading, setLoading] = useState(false)
-
-  const [form] = Form.useForm()
+  // Upload state
+  const [fileList, setFileList] = useState([]);
+  const [imageUrl, setImageUrl] = useState(null);
 
   const formSubmitHandler = async (values) => {
-    console.log(values);
-    try {
-      setLoading(true)
-      let response = await api.post('/api/admin/create-campaign', values)
-      console.log(response)
-    } catch (error) {
-      console.error(error)
-    }finally{
-      form.resetFields()
-      setLoading(false)
+    if (!imageUrl) {
+      message.error("Please upload an image before submitting.");
+      return;
     }
-  }
 
+    const payload = {
+      ...values,
+      imageUrl, 
+    };
+
+    try {
+      setLoading(true);
+      const response = await api.post('/api/admin/create-campaign', payload);
+      console.log(response);
+      message.success("Campaign created successfully");
+    } catch (error) {
+      console.error(error);
+      message.error("Error creating campaign");
+    } finally {
+      form.resetFields();
+      setFileList([]);
+      setImageUrl(null);
+      setLoading(false);
+    }
+  };
+
+  const uploadProps = {
+    name: 'image',
+    listType: 'picture',
+    maxCount: 1,
+    fileList,
+    action: 'http://localhost:5000/upload', 
+    onChange(info) {
+      let newList = [...info.fileList];
+      setFileList(newList);
+
+      const { status, response } = info.file;
+
+      if (status === 'done') {
+        const uploadedUrl = response.secure_url || response.path;
+        setImageUrl(uploadedUrl);
+        console.log(uploadedUrl);
+        message.success(`${info.file.name} uploaded successfully`);
+      } else if (status === 'error') {
+        message.error(`${info.file.name} upload failed.`);
+      }
+    },
+    onRemove() {
+      setImageUrl(null);
+      setFileList([]);
+    },
+  };
 
   return (
     <>
@@ -47,29 +87,33 @@ const CreateCampaignPage = () => {
           onFinish={formSubmitHandler}
           wrapperCol={{ span: 24 }}
           layout="vertical"
-          style={{ maxWidth: 600, marginLeft: '16px' }} // Ajustez la marge à gauche
+          style={{ maxWidth: 600, marginLeft: '16px' }}
         >
-          {/* Ligne 1 : Titre */}
+          {/* Title & Status */}
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item label="Title" name="title">
+              <Form.Item label="Title" name="title" rules={[{ required: true }]}>
                 <Input />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item label="État" name="status">
-                <Radio.Group>
-                  <Radio value="active">Active</Radio>
-                  <Radio value="completed">Completed</Radio>
-                </Radio.Group>
+              <Form.Item  label="Upload Image">
+                {imageUrl ? (
+                  <Upload  style={{ width: '30px', marginLeft: '40px' }} {...uploadProps} fileList={fileList}>
+                    {/* No button shown when image is uploaded */}
+                  </Upload>
+                ) : (
+                  <Upload  style={{  marginTop: '0px' }} {...uploadProps}>
+                    <Button  icon={<UploadOutlined />} type="primary">
+                      Upload
+                    </Button>
+                  </Upload>
+                )}
               </Form.Item>
             </Col>
           </Row>
 
-          {/* Ligne 2 : Description */}
-        
-
-          {/* Ligne 3 : Quantité Cible et Quantité Collectée */}
+          {/* Quantity */}
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item label="Quantité Cible" name="targetQuantity">
@@ -83,7 +127,7 @@ const CreateCampaignPage = () => {
             </Col>
           </Row>
 
-          {/* Ligne 4 : Date de Début et Date de Fin */}
+          {/* Dates */}
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item label="Date de Début" name="startDate">
@@ -96,21 +140,27 @@ const CreateCampaignPage = () => {
               </Form.Item>
             </Col>
           </Row>
-  <Row gutter={16}>
+
+          {/* Description */}
+          <Row gutter={16}>
             <Col span={24}>
               <Form.Item label="Description" name="description">
                 <TextArea rows={4} />
               </Form.Item>
             </Col>
           </Row>
-          {/* Ligne 5 : Boutons Soumettre et Annuler */}
+
+
+          {/* Buttons */}
           <Row gutter={16}>
-            <Col span={24} style={{ textAlign: 'left' }}> {/* Alignement à gauche */}
+            <Col span={24} style={{ textAlign: 'left' }}>
               <Form.Item>
-                <Button htmlType='submit' onClick={sub} style={{ marginRight: '8px' }} type="primary">
+                <Button htmlType="submit" type="primary" style={{ marginRight: 8 }}>
                   Soumettre
                 </Button>
-                <Button >Annuler</Button>
+                <Button htmlType="button" onClick={() => form.resetFields()}>
+                  Annuler
+                </Button>
               </Form.Item>
             </Col>
           </Row>

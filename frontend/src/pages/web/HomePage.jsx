@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import bg from '../../assets/bg.png';
 import Rectangle from '../../assets/Rectangle.png';
 import icon1 from '../../assets/icons/icon1.png';
+import icon2 from '../../assets/icons/icon2.png';
+import icon3 from '../../assets/icons/icon3.png';
+import icon4 from '../../assets/icons/icon4.png';
 import vector from '../../assets/icons/vector.png';
+import car from '../../assets/icons/car.png';
+import calendar from '../../assets/icons/calendar.png';
 import line from '../../assets/line.png';
+import defaultImage from '../../assets/defaultImage.png';
 import image1 from '../../assets/images/image1.png';
 import image2 from '../../assets/images/image2.png';
 import image3 from '../../assets/images/image3.png';
@@ -28,10 +34,15 @@ import ScrollToTop from '../../components/ScrollToTop';
 import { FaUser, FaCog, FaSignOutAlt } from 'react-icons/fa';
 import StatsSection from '../../components/Web/StatsSection';
 import 'animate.css';
+import { Navigate, useNavigate } from 'react-router-dom';
+import api from '../../config/axiosConfig';
+import { Spin } from 'antd';
 
 export const HomePage = () => {
   const [activeButton, setActiveButton] = useState('10$');
-  
+  //use navigate
+  const navigate = useNavigate();
+
   // Intersection observers for each section
   const [heroRef, heroInView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [missionRef, missionInView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -41,6 +52,32 @@ export const HomePage = () => {
   const [worldRef, worldInView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [storiesRef, storiesInView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [supportRef, supportInView] = useInView({ triggerOnce: true, threshold: 0.1 });
+
+
+  const [featuredCampaigns, setFeaturedCampaigns] = useState([]);
+const [loading, setLoading] = useState(false);
+
+const getRandomCampaigns = async () => {
+  setLoading(true);
+  try {
+    const result = await api.get('/api/admin/campaings');
+    if (result.status === 200) {
+      const campaigns = result.data.data;
+      const shuffled = [...campaigns].sort(() => 0.5 - Math.random());
+      const selected = shuffled.slice(0, 3);
+      setFeaturedCampaigns(selected);
+    }
+  } catch (err) {
+    console.error('Error fetching featured campaigns:', err);
+  } finally {
+    setLoading(false);
+  }
+};
+
+useEffect(() => {
+  getRandomCampaigns();
+}, []);
+
 
   return (
     <div className='relative'>
@@ -69,31 +106,52 @@ export const HomePage = () => {
         <StatsSection />
       </section>
 
-      {/* Mission Section */}
-      <section ref={missionRef} className='flex items-center justify-end bg-gradient-to-r from-[#FFFFFF] via-[#FFFFFF]/60'>
-        <div className="relative flex items-center justify-start bg-cover bg-center bg-no-repeat min-h-[600px] w-[75%]" style={{ backgroundImage: `url(${Rectangle})` }}>
-          <div className="inset-0 before:absolute before:inset-0 before:bg-gradient-to-r before:from-[#FFFFFF] before:via-[#FFFFFF]/80 before:w-[85%]"></div>
-          <div className={`${missionInView ? 'animate__animated animate__zoomIn' : ''} relative z-10 pt-16 pb-12 flex flex-col gap-2 justify-center items-start lg:-ml-[200px] w-[50%]`}>
-            <h1 className="font-rubik text-Color1 font-semibold text-[35px] leading-[44px] tracking-[-0.015em]">Our Mission & Goals</h1>
-            <p className="font-robotor font-normal text-[#2C2C2CD8] w-[85%] text-[17px] leading-[24px]">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt repudiandae nulla tempore eius, ipsam voluptatum itaque impedit consequatur qui perferendis quo nisi obcaecati dicta magnam dolor blanditiis eos pariatur quae.
-            </p>
-            <div className='mt-8 grid gap-6 grid-cols-2 grid-rows-2'>
-              {[1, 2, 3, 4].map((item) => (
-                <div key={item} className='flex items-center justify-start gap-4'>
-                  <div className='min-w-[75px] h-[75px] bg-Color2 flex items-center justify-center'>
-                    <img src={icon1} alt="icon" />
-                  </div>
-                  <div className='flex flex-col items-start justify-start'>
-                    <h3 className='font-poppins font-medium text-[17px] leading-[150%] tracking-[-0.02em]'>Quick Fundraise</h3>
-                    <p className='font-[Helvetica] font-normal text-[14px] leading-[150%] tracking-[-0.02em] text-[#474747]'>Embarrassing hidden in the generators on the Internet</p>
-                  </div>
+    {/* Mission Section */}
+    <section ref={missionRef} className='flex items-center justify-end bg-gradient-to-r from-[#FFFFFF] via-[#FFFFFF]/60'>
+      <div className="relative flex items-center justify-start bg-cover bg-center bg-no-repeat min-h-[600px] w-[75%]" style={{ backgroundImage: `url(${Rectangle})` }}>
+        <div className="inset-0 before:absolute before:inset-0 before:bg-gradient-to-r before:from-[#FFFFFF] before:via-[#FFFFFF]/80 before:w-[85%]"></div>
+        <div className={`${missionInView ? 'animate__animated animate__zoomIn' : ''} relative z-10 pt-16 pb-12 flex flex-col gap-2 justify-center items-start lg:-ml-[200px] w-[50%]`}>
+          <h1 className="font-rubik text-Color1 font-semibold text-[35px] leading-[44px] tracking-[-0.015em]">Our Mission & Goals</h1>
+          <p className="font-robotor font-normal text-[#2C2C2CD8] w-[85%] text-[17px] leading-[24px]">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt repudiandae nulla tempore eius, ipsam voluptatum itaque impedit consequatur qui perferendis quo nisi obcaecati dicta magnam dolor blanditiis eos pariatur quae.
+          </p>
+          <div className='mt-8 grid gap-6 grid-cols-2 grid-rows-2'>
+            {[
+              {
+                icon: icon1,
+                title: 'Quick Fundraise',
+                text: 'Embarrassing hidden in the generators on the Internet'
+              },
+              {
+                icon: icon2,
+                title: 'Trusted Platform',
+                text: 'We ensure transparency and integrity in every campaign'
+              },
+              {
+                icon: icon3,
+                title: 'Community Driven',
+                text: 'Built by and for the people who care about impact'
+              },
+              {
+                icon: icon4,
+                title: 'Secure Payments',
+                text: 'Your donations are protected and encrypted end-to-end'
+              }
+            ].map((item, index) => (
+              <div key={index} className='flex items-center justify-start gap-4'>
+                <div className='min-w-[75px] h-[75px] bg-Color2 flex items-center justify-center'>
+                  <img src={item.icon} alt="icon" />
                 </div>
-              ))}
-            </div>
+                <div className='flex flex-col items-start justify-start'>
+                  <h3 className='font-poppins font-medium text-[17px] leading-[150%] tracking-[-0.02em]'>{item.title}</h3>
+                  <p className='font-[Helvetica] font-normal text-[14px] leading-[150%] tracking-[-0.02em] text-[#474747]'>{item.text}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
       {/* How It Works Section */}
       <section ref={howItWorksRef} className='flex container p-8 mx-auto items-center justify-center my-12'>
@@ -102,26 +160,42 @@ export const HomePage = () => {
             How It Works
           </h1>
           <p className={`${howItWorksInView ? 'animate__animated animate__fadeIn' : ''} mb-16 font-plusJakartaSans font-normal text-[18px] leading-[150%] tracking-[0%] text-center text-[#000000E0] w-[40%] mt-4`}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+            Discover how easy it is to get started with just a few simple steps.
           </p>
-          <div className={`${howItWorksInView ? 'animate__animated animate__fadeIn' : ''} flex flex-row`}>
-            {['Choose Location', 'Pick-up Date', 'Book Your Care'].map((step, index) => (
-              <div key={index} className='flex flex-col items-center justify-start gap-5'>
+          <div className={`${howItWorksInView ? 'animate__animated animate__fadeIn' : ''} flex flex-row gap-16`}>
+            {[
+              {
+                title: 'Select Your Destination',
+                text: 'Aliquam erat volutpat. Integer malesuada turpis id fringilla suscipit. Maecenas ultrices, orci vitae convallis mattis.',
+                image: vector,
+              },
+              {
+                title: 'Set Your Date',
+                text: 'Aliquam erat volutpat. Integer malesuada turpis id fringilla suscipit. Maecenas ultrices, orci vitae convallis mattis.',
+                image: calendar,
+              },
+              {
+                title: 'Confirm and Enjoy',
+                text: 'Aliquam erat volutpat. Integer malesuada turpis id fringilla suscipit. Maecenas ultrices, orci vitae convallis mattis.',
+                image: car,
+              },
+            ].map((item, index) => (
+              <div key={index} className='flex flex-col items-center justify-start gap-5 relative'>
                 <div className='min-w-[90px] h-[90px] rounded-[30px] bg-[rgba(3,63,115,0.14)] flex justify-center items-center'>
-                  <img className='w-[35px] h-[45px]' src={vector} alt="" />
+                  <img className='w-[35px] h-[45px]' src={item.image} alt="" />
                 </div>
                 <div className='flex flex-col items-center justify-center gap-2'>
-                  <h3 className="font-plusJakartaSans text-[#000000E0] font-semibold text-[24px] leading-[150%] tracking-[-0.02em]">
-                    {step}
+                  <h3 className="font-plusJakartaSans text-[#000000E0] font-semibold text-[24px] leading-[150%] tracking-[-0.02em] text-center">
+                    {item.title}
                   </h3>
                   <p className="font-plusJakartaSans text-[#000000E0] font-normal text-[14px] leading-[175%] tracking-[-0.02em] text-center w-[65%]">
-                    Aliquam erat volutpat. Integer malesuada turpis id fringilla suscipit. Maecenas ultrices, orci vitae convallis mattis.
+                    {item.text}
                   </p>
                 </div>
                 {index < 2 && (
                   <img 
                     className='absolute h-[75px]' 
-                    style={{ left: index === 0 ? '380px' : '', right: index === 1 ? '375px' : 'auto' }}
+                    style={{ left: index === 0 ? '240px' : '', right: index === 1 ? '-185px' : '' }}
                     src={line} 
                     alt="" 
                   />
@@ -134,32 +208,42 @@ export const HomePage = () => {
 
       {/* Featured Campaigns Section */}
       <section ref={campaignsRef} className='flex px-14 container mx-auto items-center justify-center mt-12 mb-20'>
-        <div className="flex flex-col justify-center items-center">
+        <div className="flex flex-col justify-center items-center w-full">
           <h1 className={`${campaignsInView ? 'animate__animated animate__zoomIn' : ''} font-plusJakartaSans text-Color1 font-medium text-[48px] leading-[150%] tracking-[-0.02em]`}>
             Featured Campaigns
           </h1>
-          <div className={`${campaignsInView ? 'animate__animated animate__zoomIn' : ''} grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mt-10`}>
-            <CampaignCard
-              imageSrc={image1}
-              title="Help Children in Need"
-              content="Your donation helps provide food, education, and medical care."
-              percentage={120}
-            />
-            <CampaignCard
-              imageSrc={image2}
-              title="Nemo enim ipsam"
-              content="Consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt."
-              percentage={70}
-            />
-            <CampaignCard
-              imageSrc={image3}
-              title="Nemo enim ipsam"
-              content="Consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt."
-              percentage={70}
-            />
-          </div>
+
+            <button
+              onClick={() => navigate('/campaigns')}
+              className=" text-Color4 font-plusJakartaSans font-medium text-[17px] leading-[150%] tracking-[-0.02em] text-center underline flex self-end  capitalize "
+            >
+              view campaigns  {'>'}
+            </button>
+
+          {loading ? (
+            <div className="">
+              <Spin />
+            </div>
+          ) : (
+            <div className={`${campaignsInView ? 'animate__animated animate__zoomIn' : ''} grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mt-6 w-full`}>
+              {featuredCampaigns.map((campaign, index) => (
+                <CampaignCard
+                  key={index}
+                  imageSrc={`http://localhost:5000${campaign.imageUrl}` || defaultImage} 
+                  title={campaign.title}
+                  content={
+                    campaign.description.length > 70
+                      ? campaign.description.substring(0, 70) + '...'
+                      : campaign.description
+                  }
+                  percentage={Math.min(100, Math.round((campaign.collectedQuantity / campaign.targetQuantity) * 100))}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </section>
+
 
       {/* Join Us Section */}
       <section ref={joinUsRef} style={{ backgroundImage: `url(${bg2})` , backgroundAttachment: 'fixed' }} className=' flex items-end justify-center bg-cover bg-center bg-no-repeat min-h-[450px] w-[100%] my-14'>

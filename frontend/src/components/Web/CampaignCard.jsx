@@ -2,11 +2,11 @@ import React from 'react';
 
 const CampaignCard = ({ imageSrc, title, content, percentage }) => {
   return (
-    <div className="flex flex-col h-fit shadow-custom-shadow">
+    <div className="flex flex-col h-full shadow-custom-shadow">
       {/* Dynamic Image */}
       <img className="h-[250px] w-full object-cover" src={imageSrc} alt={title} />
       
-      <div className="p-8 gap-7 flex flex-col items-start justify-start">
+      <div className="p-8 gap-7  flex flex-col items-start justify-between"  style={{ height: 'calc(100% - 250px)' }}>
         {/* Title */}
         <h2 className="font-montserrat font-medium text-[21px] leading-[36px] tracking-[-0.015em]">
           {title}

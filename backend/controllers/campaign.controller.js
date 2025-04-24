@@ -41,9 +41,17 @@ export const getCampaign = async (req, res) => {
 
 export const createCampaign = async (req, res) => {
     try {
-        const { title, status = "active", description, targetQuantity = 0, collectedQuantity = 0, startDate, endDate } = req.body;
+        const {
+            title,
+            status = "active",
+            description,
+            targetQuantity = 0,
+            collectedQuantity = 0,
+            startDate,
+            endDate,
+            imageUrl // <-- NEW
+        } = req.body;
 
-        // Ensure dates are converted properly
         const parsedStartDate = startDate ? new Date(startDate) : undefined;
         const parsedEndDate = endDate ? new Date(endDate) : undefined;
 
@@ -54,11 +62,11 @@ export const createCampaign = async (req, res) => {
             targetQuantity,
             collectedQuantity,
             startDate: parsedStartDate,
-            endDate: parsedEndDate
+            endDate: parsedEndDate,
+            imageUrl: imageUrl || null // <-- NEW
         });
 
         let result = await newCampaign.save();
-        console.log("Campaign Created:", result);
 
         res.status(201).json({
             message: "Campaign created successfully",
@@ -67,8 +75,7 @@ export const createCampaign = async (req, res) => {
 
     } catch (error) {
         console.error("Error Creating Campaign:", error);
-        
-        // Handle Mongoose validation errors
+
         if (error.name === "ValidationError") {
             return res.status(400).json({
                 error: "Validation error",
@@ -83,7 +90,6 @@ export const createCampaign = async (req, res) => {
     }
 };
 
-
 export const updateCampaign = async (req, res) => {
     try {
         const { id } = req.params;
@@ -92,9 +98,17 @@ export const updateCampaign = async (req, res) => {
             return res.status(400).json({ message: "Invalid campaign id" });
         }
 
-        const { title, status = "active", description, targetQuantity = 0, collectedQuantity = 0, startDate, endDate } = req.body;
+        const {
+            title,
+            status = "active",
+            description,
+            targetQuantity = 0,
+            collectedQuantity = 0,
+            startDate,
+            endDate,
+            imageUrl // <-- NEW
+        } = req.body;
 
-        // Ensure dates are converted properly
         const parsedStartDate = startDate ? new Date(startDate) : undefined;
         const parsedEndDate = endDate ? new Date(endDate) : undefined;
 
@@ -107,9 +121,10 @@ export const updateCampaign = async (req, res) => {
                 targetQuantity,
                 collectedQuantity,
                 startDate: parsedStartDate,
-                endDate: parsedEndDate
+                endDate: parsedEndDate,
+                imageUrl: imageUrl || null // <-- NEW
             },
-            { new: true } // Return the updated document
+            { new: true }
         );
 
         if (!updatedCampaign) {
@@ -124,6 +139,7 @@ export const updateCampaign = async (req, res) => {
         res.status(500).json({ error: 'error in updating campaign', message: error.message });
     }
 };
+
 
 export const deleteCampaign = async (req, res) => {
     try {
