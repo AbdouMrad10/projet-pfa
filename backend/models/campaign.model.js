@@ -34,7 +34,11 @@ const campaignSchema = new mongoose.Schema({
       },
       message: "End date must be after start date"
     }
-  }
+  },
+  imageUrl: {
+    type: String,
+    default: null
+  },
 });
 
-export const Campaign = mongoose.model("Campaign", campaignSchema);
+export const Campaign = mongoose.models.Campaign || mongoose.model('Campaign', campaignSchema);

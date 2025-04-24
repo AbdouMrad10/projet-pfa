@@ -17,3 +17,13 @@ button {
       padding: 10px !important;
     }
  
+  .ant-upload-list-item-done{
+    margin-top: 0px !important;
+    height: 35px !important;
+    padding-left: 15px !important;
+
+}
+.ant-upload-list-item-thumbnail{
+    width: 36px !important;
+    height: 36px !important;
+}

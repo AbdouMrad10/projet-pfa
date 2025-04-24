@@ -26,7 +26,7 @@ export const NavBar = () => {
   }, []);
 
   return (
-    <nav className="text-white z-20 absolute top-0 left-0 right-0">
+    <nav className="text-white z-20 absolute top-3  left-0 right-0">
       <div className="container mx-auto flex justify-between items-center px-4">
         <div className="flex items-center space-x-20 ml-10">
           <img src={logo} alt="Logo" className="h-10 w-30" />
@@ -53,7 +53,7 @@ export const NavBar = () => {
             />
             {isDropdownOpen && (
               <>
-                <div className="absolute right-4 top-full mt-1 w-28 bg-[#FFFFFF] rounded-md shadow-lg z-40 before:content-[''] before:absolute before:-top-1 before:right-6 before:w-3 before:h-3 before:-z-10 before:bg-[#FFFFFF] before:transform before:rotate-45 before:border-t ">
+                <div className="absolute -right-3 top-full mt-3 w-28 bg-[#FFFFFF] rounded-md shadow-lg z-40 before:content-[''] before:absolute before:-top-1 before:right-6 before:w-3 before:h-3 before:-z-10 before:bg-[#FFFFFF] before:transform before:rotate-45 before:border-t ">
                   <div className="p-1">
                     <Link 
                       to="/profile" 
