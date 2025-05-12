@@ -84,7 +84,7 @@ export const Campaigns = () => {
             return (
                 <CampaignCard
                   key={index}
-                  imageSrc={`http://localhost:5000${campaign.imageUrl}`} // ensure your backend serves uploads
+                  imageSrc={`http://localhost:5000${campaign.imageUrl}`} 
                   title={campaign.title}
                   content={
                     campaign.description.length > 70
@@ -92,6 +92,7 @@ export const Campaigns = () => {
                       : campaign.description
                   }
                   percentage={percentage}
+                  _id={campaign._id}
                 />
             );
           })}

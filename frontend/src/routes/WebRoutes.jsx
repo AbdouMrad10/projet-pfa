@@ -6,6 +6,7 @@ import { About } from "../pages/web/About";
 import { Contact } from "../pages/web/Contact";
 import { Campaigns } from "../pages/web/Campaigns";
 import { NotFound } from "../pages/web/NotFound";
+import { CampaignDetails } from "../pages/web/CampaignDetails";
 
 const WebRoutes = () => {
   return (
@@ -15,6 +16,7 @@ const WebRoutes = () => {
         <Route path="about" element={<About />} />
         <Route path="contact" element={<Contact />} />
         <Route path="campaigns" element={<Campaigns />} />
+        <Route path="campaigns/:id" element={<CampaignDetails />} />
       </Route>
     </Routes>
   );

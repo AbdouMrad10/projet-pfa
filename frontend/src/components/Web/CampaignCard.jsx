@@ -1,6 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const CampaignCard = ({ imageSrc, title, content, percentage }) => {
+
+
+const CampaignCard = ({ imageSrc, title, content, percentage, _id }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="flex flex-col h-full shadow-custom-shadow">
       {/* Dynamic Image */}
@@ -27,7 +32,9 @@ const CampaignCard = ({ imageSrc, title, content, percentage }) => {
         </div>
 
         {/* Donate Button */}
-        <button className="font-poppins border-2 border-Color5 text-Color5 font-medium text-[17px] leading-[150%] tracking-[-0.02em] text-center flex items-center capitalize rounded-md py-2 px-14 justify-center w-full hover:bg-Color5 hover:text-white transition duration-300 ease-in-out self-center">
+        <button  
+        onClick={() => navigate("/campaigns/" + _id)}
+        className="font-poppins border-2 border-Color5 text-Color5 font-medium text-[17px] leading-[150%] tracking-[-0.02em] text-center flex items-center capitalize rounded-md py-2 px-14 justify-center w-full hover:bg-Color5 hover:text-white transition duration-300 ease-in-out self-center">
           Donate to campaign
         </button>
       </div>
